@@ -1,5 +1,6 @@
 package;
 
+import flixel.math.FlxMath;
 import flixel.FlxObject;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -64,6 +65,23 @@ class Player extends FlxSprite {
 
 	override public function update(elapsed:Float):Void {
 		move();
+		animate();
+
 		super.update(elapsed);
+	}
+
+	private function animate():Void {
+		if ((velocity.y <= 0) && (!isTouching(FlxObject.FLOOR)))
+			animation.play("jump");
+		else if (velocity.y > 0)
+			animation.play("full");
+		else if (velocity.x == 0)
+			animation.play("idle");
+		else {
+			if (FlxMath.signOf(velocity.x) != FlxMath.signOf(direction))
+				animation.play("skid");
+			else
+				animation.play("walk");
+		}
 	}
 }
