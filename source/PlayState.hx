@@ -8,7 +8,7 @@ import flixel.tile.FlxTilemap;
 import flixel.FlxState;
 
 class PlayState extends FlxState {
-	public var map:FlxTilemap;
+	var map:FlxTilemap;
 	var player:Player;
 	var mapData:Array<Int> = [
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
@@ -27,13 +27,13 @@ class PlayState extends FlxState {
 
 	override public function create():Void {
 		/*
-		map = new FlxTilemap();
-		map.loadMapFromArray(mapData, 20, 12, AssetPaths.tiles__png, 16, 16);
-		add(map);
-		*/
+			map = new FlxTilemap();
+			map.loadMapFromArray(mapData, 20, 12, AssetPaths.tiles__png, 16, 16);
+			add(map);
+		 */
 
-		player = new Player(cast (FlxG.width / 2), 10);
-		
+		player = new Player(cast(FlxG.width / 2), 10);
+
 		LevelLoader.loadLevel(this, "playground");
 		add(player);
 		super.create();
