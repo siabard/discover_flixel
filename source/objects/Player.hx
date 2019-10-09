@@ -1,4 +1,4 @@
-package;
+package objects;
 
 import flixel.math.FlxMath;
 import flixel.FlxObject;
@@ -16,8 +16,8 @@ class Player extends FlxSprite {
 
 	public var direction:Int = 1;
 
-	public function new(X:Int, Y:Int) {
-		super(X, Y);
+	public function new() {
+		super();
 
 		loadGraphic(AssetPaths.player__png, true, 16, 16);
 
@@ -61,6 +61,9 @@ class Player extends FlxSprite {
 
 		if ((velocity.y < 0) && (FlxG.keys.justReleased.C))
 			velocity.y = velocity.y * 0.5;
+
+		if (x < 0)
+			x = 0;
 	}
 
 	override public function update(elapsed:Float):Void {

@@ -1,15 +1,19 @@
-package;
-
-import flixel.FlxObject;
+package states;
+import flixel.group.FlxGroup.FlxTypedGroup;
+import objects.Player;
+import objects.Coin;
+import flixel.FlxCamera.FlxCameraFollowStyle;
 import flixel.FlxG;
-import flixel.util.FlxColor;
 import flixel.FlxSprite;
 import flixel.tile.FlxTilemap;
 import flixel.FlxState;
+import utils.LevelLoader;
 
 class PlayState extends FlxState {
-	var map:FlxTilemap;
-	var player:Player;
+	public var map:FlxTilemap;
+	public var player(default, null) :Player;
+	public var items(default, null): FlxTypedGroup<FlxSprite>;
+
 	var mapData:Array<Int> = [
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
@@ -32,10 +36,16 @@ class PlayState extends FlxState {
 			add(map);
 		 */
 
-		player = new Player(cast(FlxG.width / 2), 10);
-
+		items = new FlxTypedGroup<FlxSprite>();
+		
+		player = new Player();
+		
 		LevelLoader.loadLevel(this, "playground");
 		add(player);
+		add(items);
+
+		FlxG.camera.follow(player, FlxCameraFollowStyle.PLATFORMER);
+		FlxG.camera.setScrollBoundsRect(0, 0, map.width, map.height, true);
 		super.create();
 	}
 
@@ -43,5 +53,10 @@ class PlayState extends FlxState {
 		super.update(elapsed);
 
 		FlxG.collide(map, player);
+		FlxG.overlap(items, player, collideItems);
+	}
+
+	function collideItems(coin: Coin, player: Player) {
+		coin.collect();
 	}
 }
