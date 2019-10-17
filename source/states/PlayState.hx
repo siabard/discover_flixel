@@ -1,4 +1,5 @@
 package states;
+
 import flixel.group.FlxGroup.FlxTypedGroup;
 import objects.Player;
 import objects.Coin;
@@ -10,9 +11,11 @@ import flixel.FlxState;
 import utils.LevelLoader;
 
 class PlayState extends FlxState {
+	private var _hud:HUD;
+
 	public var map:FlxTilemap;
-	public var player(default, null) :Player;
-	public var items(default, null): FlxTypedGroup<FlxSprite>;
+	public var player(default, null):Player;
+	public var items(default, null):FlxTypedGroup<FlxSprite>;
 
 	var mapData:Array<Int> = [
 		1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
@@ -37,12 +40,13 @@ class PlayState extends FlxState {
 		 */
 
 		items = new FlxTypedGroup<FlxSprite>();
-		
+		_hud = new HUD();
 		player = new Player();
-		
+
 		LevelLoader.loadLevel(this, "playground");
 		add(player);
 		add(items);
+		add(_hud);
 
 		FlxG.camera.follow(player, FlxCameraFollowStyle.PLATFORMER);
 		FlxG.camera.setScrollBoundsRect(0, 0, map.width, map.height, true);
@@ -56,7 +60,7 @@ class PlayState extends FlxState {
 		FlxG.overlap(items, player, collideItems);
 	}
 
-	function collideItems(coin: Coin, player: Player) {
+	function collideItems(coin:Coin, player:Player) {
 		coin.collect();
 	}
 }
