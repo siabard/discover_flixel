@@ -43,4 +43,7 @@
   <object id="27" gid="7" x="619" y="197" width="16" height="16"/>
   <object id="28" gid="7" x="643" y="194" width="16" height="16"/>
  </objectgroup>
+ <objectgroup id="5" name="enemies">
+  <object id="1" gid="8" x="178" y="206" width="16" height="11"/>
+ </objectgroup>
 </map>

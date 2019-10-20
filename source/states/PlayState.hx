@@ -3,6 +3,7 @@ package states;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import objects.Player;
 import objects.Coin;
+import objects.Enemy;
 import flixel.FlxCamera.FlxCameraFollowStyle;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -16,37 +17,19 @@ class PlayState extends FlxState {
 	public var map:FlxTilemap;
 	public var player(default, null):Player;
 	public var items(default, null):FlxTypedGroup<FlxSprite>;
-
-	var mapData:Array<Int> = [
-		1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-		1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-		1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-		1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-	];
+	public var enemies(default, null):FlxTypedGroup<Enemy>;
 
 	override public function create():Void {
-		/*
-			map = new FlxTilemap();
-			map.loadMapFromArray(mapData, 20, 12, AssetPaths.tiles__png, 16, 16);
-			add(map);
-		 */
-
 		items = new FlxTypedGroup<FlxSprite>();
 		_hud = new HUD();
 		player = new Player();
+		enemies = new FlxTypedGroup<Enemy>();
 
 		LevelLoader.loadLevel(this, "playground");
 		add(player);
 		add(items);
 		add(_hud);
+		add(enemies);
 
 		FlxG.camera.follow(player, FlxCameraFollowStyle.PLATFORMER);
 		FlxG.camera.setScrollBoundsRect(0, 0, map.width, map.height, true);
@@ -58,9 +41,17 @@ class PlayState extends FlxState {
 
 		FlxG.collide(map, player);
 		FlxG.overlap(items, player, collideItems);
+		FlxG.overlap(enemies, player, collideEnemies);
+
+		FlxG.collide(map, enemies);
+		FlxG.collide(enemies, enemies);
 	}
 
-	function collideItems(coin:Coin, player:Player) {
+	function collideItems(coin:Coin, player:Player):Void {
 		coin.collect();
+	}
+
+	function collideEnemies(enemy:Enemy, player:Player):Void {
+		enemy.interact(player);
 	}
 }

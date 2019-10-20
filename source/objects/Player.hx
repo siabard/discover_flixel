@@ -36,6 +36,10 @@ class Player extends FlxSprite {
 		maxVelocity.set(WALK_SPEED, FALLING_SPEED);
 	}
 
+	public function jump() {
+		velocity.y = JUMP_FORCE;
+	}
+
 	private function move():Void {
 		acceleration.x = 0;
 
@@ -51,7 +55,7 @@ class Player extends FlxSprite {
 
 		if (velocity.y == 0) {
 			if (FlxG.keys.justPressed.C && isTouching(FlxObject.FLOOR))
-				velocity.y = JUMP_FORCE;
+				jump();
 
 			if (FlxG.keys.pressed.X)
 				maxVelocity.x = RUN_SPEED;

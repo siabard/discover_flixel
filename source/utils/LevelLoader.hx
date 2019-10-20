@@ -1,5 +1,6 @@
 package utils;
 
+import objects.Enemy;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.addons.editors.tiled.TiledObjectLayer;
 import flixel.tile.FlxTilemap;
@@ -9,10 +10,9 @@ import states.PlayState;
 import objects.Coin;
 
 class LevelLoader {
-
-	public static function getLevelObjects(map: TiledMap, layer: String): Array<TiledObject> {
+	public static function getLevelObjects(map:TiledMap, layer:String):Array<TiledObject> {
 		if ((map != null) && (map.getLayer(layer) != null)) {
-			var objLayer: TiledObjectLayer = cast map.getLayer(layer);
+			var objLayer:TiledObjectLayer = cast map.getLayer(layer);
 			return objLayer.objects;
 		} else {
 			trace("Object layer " + layer + " not found! ");
@@ -34,11 +34,16 @@ class LevelLoader {
 
 		state.add(backMap);
 		state.add(state.map);
-				
-		var playerPos: TiledObject = getLevelObjects(tiledMap, "player")[0];
+
+		var playerPos:TiledObject = getLevelObjects(tiledMap, "player")[0];
 		state.player.setPosition(playerPos.x, playerPos.y - 16);
-		for(coin in getLevelObjects(tiledMap, "coins")) {
+		for (coin in getLevelObjects(tiledMap, "coins")) {
 			state.items.add(new Coin(coin.x, coin.y - 16));
+		}
+
+		// Load enemies
+		for (enemy in getLevelObjects(tiledMap, "enemies")) {
+			state.enemies.add(new Enemy(enemy.x, enemy.y - 16));
 		}
 	}
 }
