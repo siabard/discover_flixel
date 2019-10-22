@@ -20,6 +20,10 @@ class PlayState extends FlxState {
 	public var enemies(default, null):FlxTypedGroup<Enemy>;
 
 	override public function create():Void {
+		Reg.PS = this;
+		Reg.pause = false;
+		Reg.time = 300;
+
 		items = new FlxTypedGroup<FlxSprite>();
 		_hud = new HUD();
 		player = new Player();
@@ -39,12 +43,16 @@ class PlayState extends FlxState {
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
 
-		FlxG.collide(map, player);
-		FlxG.overlap(items, player, collideItems);
-		FlxG.overlap(enemies, player, collideEnemies);
+		if (player.alive) {
+			FlxG.collide(map, player);
+			FlxG.overlap(items, player, collideItems);
+			FlxG.overlap(enemies, player, collideEnemies);
+		}
 
 		FlxG.collide(map, enemies);
 		FlxG.collide(enemies, enemies);
+
+		updateTime(elapsed);
 	}
 
 	function collideItems(coin:Coin, player:Player):Void {
@@ -53,5 +61,16 @@ class PlayState extends FlxState {
 
 	function collideEnemies(enemy:Enemy, player:Player):Void {
 		enemy.interact(player);
+	}
+
+	private function updateTime(elapsed:Float) {
+		if (!Reg.pause) {
+			if (Reg.time > 0)
+				Reg.time -= elapsed;
+			else {
+				Reg.time = 0;
+				player.kill();
+			}
+		}
 	}
 }

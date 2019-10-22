@@ -1,5 +1,6 @@
 package objects;
 
+import flixel.util.FlxTimer;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 
@@ -43,7 +44,9 @@ class Enemy extends FlxSprite {
 				flipDirection();
 			}
 		}
-		super.update(elapsed);
+
+		if (!Reg.pause)
+			super.update(elapsed);
 	}
 
 	private function flipDirection() {
@@ -66,5 +69,19 @@ class Enemy extends FlxSprite {
 		} else {
 			player.kill();
 		}
+	}
+
+	override public function kill() {
+		alive = false;
+		Reg.score += SCORE_AMOUNT;
+
+		velocity.x = 0;
+		acceleration.x = 0;
+		animation.play("dead");
+
+		new FlxTimer().start(1.0, function(_) {
+			exists = false;
+			visible = false;
+		}, 1);
 	}
 }

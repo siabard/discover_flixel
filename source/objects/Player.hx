@@ -1,5 +1,6 @@
 package objects;
 
+import flixel.util.FlxTimer;
 import flixel.math.FlxMath;
 import flixel.FlxObject;
 import flixel.FlxG;
@@ -26,7 +27,7 @@ class Player extends FlxSprite {
 		animation.add("skid", [4]);
 		animation.add("jump", [5]);
 		animation.add("fall", [5]);
-		animation.add("dead", [12]);
+		animation.add("dead", [6]);
 
 		setSize(8, 12);
 		offset.set(4, 4);
@@ -37,7 +38,10 @@ class Player extends FlxSprite {
 	}
 
 	public function jump() {
-		velocity.y = JUMP_FORCE;
+		if (FlxG.keys.pressed.C)
+			velocity.y = JUMP_FORCE;
+		else
+			velocity.y = JUMP_FORCE / 2;
 	}
 
 	private function move():Void {
@@ -68,17 +72,23 @@ class Player extends FlxSprite {
 
 		if (x < 0)
 			x = 0;
+
+		if (y > Reg.PS.map.height - height)
+			kill();
 	}
 
 	override public function update(elapsed:Float):Void {
-		move();
+		if (!Reg.pause) {
+			move();
+		}
 		animate();
-
 		super.update(elapsed);
 	}
 
 	private function animate():Void {
-		if ((velocity.y <= 0) && (!isTouching(FlxObject.FLOOR)))
+		if (!alive)
+			animation.play("dead");
+		else if ((velocity.y <= 0) && (!isTouching(FlxObject.FLOOR)))
 			animation.play("jump");
 		else if (velocity.y > 0)
 			animation.play("full");
@@ -89,6 +99,24 @@ class Player extends FlxSprite {
 				animation.play("skid");
 			else
 				animation.play("walk");
+		}
+	}
+
+	override public function kill() {
+		if (alive) {
+			alive = false;
+			velocity.set(0, 0);
+			acceleration.set(0, 0);
+			Reg.lives -= 1;
+			Reg.pause = true;
+			new FlxTimer().start(2.0, function(_) {
+				acceleration.y = GRAVITY;
+				jump();
+			}, 1);
+
+			new FlxTimer().start(6.0, function(_) {
+				FlxG.resetState();
+			});
 		}
 	}
 }
