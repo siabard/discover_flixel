@@ -1,6 +1,7 @@
 package utils;
 
-import objects.Enemy;
+import objects.WalkEnemy;
+import objects.SpikeEnemy;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.addons.editors.tiled.TiledObjectLayer;
 import flixel.tile.FlxTilemap;
@@ -43,7 +44,12 @@ class LevelLoader {
 
 		// Load enemies
 		for (enemy in getLevelObjects(tiledMap, "enemies")) {
-			state.enemies.add(new Enemy(enemy.x, enemy.y - 16));
+			switch (enemy.type) {
+				case "spike":
+					state.enemies.add(new SpikeEnemy(enemy.x, enemy.y - 16));
+				default:
+					state.enemies.add(new WalkEnemy(enemy.x, enemy.y - 16));
+			}
 		}
 	}
 }

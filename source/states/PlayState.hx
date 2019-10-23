@@ -1,5 +1,6 @@
 package states;
 
+import flixel.group.FlxGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import objects.Player;
 import objects.Coin;
@@ -13,6 +14,7 @@ import utils.LevelLoader;
 
 class PlayState extends FlxState {
 	private var _hud:HUD;
+	private var _entities:FlxGroup;
 
 	public var map:FlxTilemap;
 	public var player(default, null):Player;
@@ -24,16 +26,21 @@ class PlayState extends FlxState {
 		Reg.pause = false;
 		Reg.time = 300;
 
-		items = new FlxTypedGroup<FlxSprite>();
 		_hud = new HUD();
+		_entities = new FlxGroup();
+
 		player = new Player();
+		items = new FlxTypedGroup<FlxSprite>();
 		enemies = new FlxTypedGroup<Enemy>();
 
 		LevelLoader.loadLevel(this, "playground");
 		add(player);
-		add(items);
+
+		_entities.add(items);
+		_entities.add(enemies);
+
+		add(_entities);
 		add(_hud);
-		add(enemies);
 
 		FlxG.camera.follow(player, FlxCameraFollowStyle.PLATFORMER);
 		FlxG.camera.setScrollBoundsRect(0, 0, map.width, map.height, true);
@@ -45,14 +52,21 @@ class PlayState extends FlxState {
 
 		if (player.alive) {
 			FlxG.collide(map, player);
-			FlxG.overlap(items, player, collideItems);
-			FlxG.overlap(enemies, player, collideEnemies);
+			FlxG.overlap(_entities, player, collideEntities);
 		}
 
-		FlxG.collide(map, enemies);
+		FlxG.collide(map, _entities);
 		FlxG.collide(enemies, enemies);
 
 		updateTime(elapsed);
+	}
+
+	function collideEntities(entity:FlxSprite, player:Player):Void {
+		if (Std.is(entity, Coin))
+			(cast entity).collect();
+
+		if (Std.is(entity, Enemy))
+			(cast entity).interact(player);
 	}
 
 	function collideItems(coin:Coin, player:Player):Void {

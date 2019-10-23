@@ -6,9 +6,7 @@ import flixel.FlxSprite;
 
 class Enemy extends FlxSprite {
 	private static inline var GRAVITY:Int = 420;
-	private static inline var WALK_SPEED:Int = 40;
 	private static inline var FALLING_SPEED:Int = 200;
-	private static inline var SCORE_AMOUNT:Int = 100;
 
 	private var _direction:Int = -1;
 	private var _appeared:Bool = false;
@@ -16,16 +14,11 @@ class Enemy extends FlxSprite {
 	public function new(x:Float, y:Float) {
 		super(x, y);
 
-		loadGraphic(AssetPaths.enemyA__png, true, 16, 16);
-		animation.add("walk", [0, 1, 2, 1], 12);
-		animation.add("dead", [3], 12);
-		animation.play("walk");
-
-		setSize(12, 12);
-		offset.set(2, 4);
-
 		acceleration.y = GRAVITY;
 		maxVelocity.y = FALLING_SPEED;
+
+		flipX = true;
+		_direction = -1;
 	}
 
 	override public function update(elapsed:Float) {
@@ -54,9 +47,7 @@ class Enemy extends FlxSprite {
 		_direction = -_direction;
 	}
 
-	private function move() {
-		velocity.x = _direction * WALK_SPEED;
-	}
+	private function move() {}
 
 	public function interact(player:Player) {
 		if (!alive)
@@ -73,7 +64,6 @@ class Enemy extends FlxSprite {
 
 	override public function kill() {
 		alive = false;
-		Reg.score += SCORE_AMOUNT;
 
 		velocity.x = 0;
 		acceleration.x = 0;
