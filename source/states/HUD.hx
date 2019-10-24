@@ -1,5 +1,6 @@
 package states;
 
+import flixel.FlxCamera;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
 import flixel.FlxG;
@@ -58,5 +59,12 @@ class HUD extends FlxSpriteGroup {
 		_textWorld.text = "STAGE\n" + Reg.level;
 
 		super.update(elapsed);
+	}
+
+	public function setCamera(cam:FlxCamera) {
+		forEach(function(member) {
+			member.scrollFactor.set(0, 0);
+			member.cameras = [cam];
+		});
 	}
 }

@@ -1,5 +1,7 @@
 package states;
 
+import flixel.FlxCamera;
+import flixel.util.FlxColor;
 import flixel.group.FlxGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import objects.Player;
@@ -16,6 +18,9 @@ class PlayState extends FlxState {
 	private var _hud:HUD;
 	private var _entities:FlxGroup;
 
+	private var _gameCamera:FlxCamera;
+	private var _hudCamera:FlxCamera;
+
 	public var map:FlxTilemap;
 	public var player(default, null):Player;
 	public var items(default, null):FlxTypedGroup<FlxSprite>;
@@ -26,7 +31,17 @@ class PlayState extends FlxState {
 		Reg.pause = false;
 		Reg.time = 300;
 
+		_gameCamera = new FlxCamera();
+		_hudCamera = new FlxCamera();
+
+		FlxG.cameras.reset(_gameCamera);
+		FlxG.cameras.add(_hudCamera);
+		_hudCamera.bgColor = FlxColor.TRANSPARENT;
+		FlxCamera.defaultCameras = [_gameCamera];
+
 		_hud = new HUD();
+		_hud.setCamera(_hudCamera);
+
 		_entities = new FlxGroup();
 
 		player = new Player();
@@ -44,6 +59,8 @@ class PlayState extends FlxState {
 
 		FlxG.camera.follow(player, FlxCameraFollowStyle.PLATFORMER);
 		FlxG.camera.setScrollBoundsRect(0, 0, map.width, map.height, true);
+
+		openSubState(new IntroSubState(FlxColor.BLACK));
 		super.create();
 	}
 
