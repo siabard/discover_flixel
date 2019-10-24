@@ -49,9 +49,12 @@ class IntroSubState extends FlxSubState {
 		_text.alignment = FlxTextAlign.CENTER;
 
 		new FlxTimer().start(_waitToDisappear, function(_) {
-			if (_gameOver)
-				openfl.system.System.exit(0);
-			else
+			if (_gameOver) {
+				Reg.saveScore();
+				Reg.lives = 2;
+				Reg.score = 0;
+				FlxG.switchState(new MenuState());
+			} else
 				close();
 		}, 1);
 	}
