@@ -1,5 +1,6 @@
 package objects;
 
+import flixel.util.FlxTimer;
 import flixel.FlxSprite;
 
 class Coin extends FlxSprite {
@@ -28,5 +29,14 @@ class Coin extends FlxSprite {
 		}
 
 		kill();
+	}
+
+	public function setFromBlock() {
+		solid = false;
+		acceleration.y = 420;
+		velocity.y = -90;
+		new FlxTimer().start(0.3, function(_) {
+			collect();
+		}, 1);
 	}
 }

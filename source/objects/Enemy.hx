@@ -58,7 +58,7 @@ class Enemy extends FlxSprite {
 			kill();
 			player.jump();
 		} else {
-			player.kill();
+			player.damage();
 		}
 	}
 

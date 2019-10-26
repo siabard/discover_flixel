@@ -21,6 +21,6 @@ class SpikeEnemy extends Enemy {
 
 	override public function interact(player:Player) {
 		if (alive)
-			player.kill();
+			player.damage();
 	}
 }

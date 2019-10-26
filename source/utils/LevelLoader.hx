@@ -2,6 +2,7 @@ package utils;
 
 import objects.WalkEnemy;
 import objects.SpikeEnemy;
+import objects.BonusBlock;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.addons.editors.tiled.TiledObjectLayer;
 import flixel.tile.FlxTilemap;
@@ -50,6 +51,13 @@ class LevelLoader {
 				default:
 					state.enemies.add(new WalkEnemy(enemy.x, enemy.y - 16));
 			}
+		}
+
+		// Load bonus blocks
+		for (block in getLevelObjects(tiledMap, "blocks")) {
+			var blockToAdd = new BonusBlock(block.x, block.y - 16);
+			blockToAdd.content = block.type;
+			state.blocks.add(blockToAdd);
 		}
 	}
 }

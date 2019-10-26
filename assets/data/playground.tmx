@@ -47,4 +47,8 @@
   <object id="1" gid="8" x="178" y="206" width="16" height="11"/>
   <object id="2" gid="17" x="213" y="206" width="16" height="11" type="spike" />
  </objectgroup>
+ <objectgroup id="6" name="blocks">
+    <object id="1" gid="15" x="162" y="180" width="16" height="11" type="coin"/>
+    <object id="2" gid="15" x="178" y="144" width="16" height="11" type="powerup"/>
+ </objectgroup>
 </map>
