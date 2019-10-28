@@ -1,5 +1,6 @@
 package utils;
 
+import flixel.math.FlxPoint;
 import objects.WalkEnemy;
 import objects.SpikeEnemy;
 import objects.BonusBlock;
@@ -10,6 +11,7 @@ import flixel.addons.editors.tiled.TiledTileLayer;
 import flixel.addons.editors.tiled.TiledMap;
 import states.PlayState;
 import objects.Coin;
+import objects.Goal;
 
 class LevelLoader {
 	public static function getLevelObjects(map:TiledMap, layer:String):Array<TiledObject> {
@@ -37,8 +39,24 @@ class LevelLoader {
 		state.add(backMap);
 		state.add(state.map);
 
-		var playerPos:TiledObject = getLevelObjects(tiledMap, "player")[0];
-		state.player.setPosition(playerPos.x, playerPos.y - 16);
+		// Load  exit & check point
+		for (object in getLevelObjects(tiledMap, "system")) {
+			switch (object.type) {
+				case "checkpoint":
+					state.checkpoint = FlxPoint.get(object.x, object.y - 16);
+				case "goal":
+					state.items.add(new Goal(object.x, object.y - 16));
+			}
+		}
+
+		var player:TiledObject = getLevelObjects(tiledMap, "player")[0];
+		var playerPosition:FlxPoint = new FlxPoint();
+		if (Reg.checkpointReached) {
+			playerPosition = state.checkpoint;
+		} else {
+			playerPosition = FlxPoint.get(player.x, player.y - 16);
+		}
+		state.player.setPosition(playerPosition.x, playerPosition.y);
 		for (coin in getLevelObjects(tiledMap, "coins")) {
 			state.items.add(new Coin(coin.x, coin.y - 16));
 		}

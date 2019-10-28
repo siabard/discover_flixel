@@ -44,11 +44,15 @@
   <object id="28" gid="7" x="643" y="194" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="5" name="enemies">
-  <object id="1" gid="8" x="178" y="206" width="16" height="11"/>
-  <object id="2" gid="17" x="213" y="206" width="16" height="11" type="spike" />
+  <object id="29" gid="8" x="178" y="206" width="16" height="11"/>
+  <object id="30" gid="16" x="213" y="206" width="16" height="11" type="spike" />
  </objectgroup>
  <objectgroup id="6" name="blocks">
-    <object id="1" gid="15" x="162" y="180" width="16" height="11" type="coin"/>
-    <object id="2" gid="15" x="178" y="144" width="16" height="11" type="powerup"/>
+    <object id="31" gid="15" x="162" y="180" width="16" height="11" type="coin"/>
+    <object id="32" gid="15" x="178" y="144" width="16" height="11" type="powerup"/>
+ </objectgroup>
+ <objectgroup id="7" name="system">
+    <object id="33" gid="14" x="213" y="206" width="16" height="11" type="checkpoint"/>
+    <object id="34" gid="32" x="640" y="206" width="16" height="11" type="goal"/>
  </objectgroup>
 </map>

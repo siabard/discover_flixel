@@ -1,5 +1,6 @@
 package states;
 
+import flixel.math.FlxPoint;
 import flixel.FlxCamera;
 import flixel.util.FlxColor;
 import flixel.group.FlxGroup;
@@ -9,6 +10,7 @@ import objects.Coin;
 import objects.Enemy;
 import objects.PowerUp;
 import objects.BonusBlock;
+import objects.Goal;
 import flixel.FlxCamera.FlxCameraFollowStyle;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -29,6 +31,7 @@ class PlayState extends FlxState {
 	public var items(default, null):FlxTypedGroup<FlxSprite>;
 	public var enemies(default, null):FlxTypedGroup<Enemy>;
 	public var blocks(default, null):FlxTypedGroup<FlxSprite>;
+	public var checkpoint:FlxPoint;
 
 	override public function create():Void {
 		Reg.PS = this;
@@ -54,7 +57,7 @@ class PlayState extends FlxState {
 		blocks = new FlxTypedGroup<FlxSprite>();
 		enemies = new FlxTypedGroup<Enemy>();
 
-		LevelLoader.loadLevel(this, "playground");
+		LevelLoader.loadLevel(this, Reg.levels[Reg.currentLevel]);
 		add(player);
 
 		_entities.add(items);
@@ -87,6 +90,7 @@ class PlayState extends FlxState {
 		FlxG.collide(enemies, enemies);
 
 		updateTime(elapsed);
+		updateCheckPoint();
 	}
 
 	function collideEntities(entity:FlxSprite, player:Player):Void {
@@ -101,6 +105,10 @@ class PlayState extends FlxState {
 
 		if (Std.is(entity, PowerUp)) {
 			(cast entity).collect(player);
+		}
+
+		if (Std.is(entity, Goal)) {
+			(cast entity).reach(player);
 		}
 	}
 
@@ -121,5 +129,25 @@ class PlayState extends FlxState {
 				player.kill();
 			}
 		}
+	}
+
+	public function updateCheckPoint() {
+		if (checkpoint == null || Reg.checkpointReached)
+			return;
+
+		if (player.x >= checkpoint.x) {
+			trace("Checkpoint Reached");
+			Reg.checkpointReached = true;
+		}
+	}
+
+	public function nextLevel():Void {
+		Reg.checkpointReached = false;
+		checkpoint = null;
+		Reg.currentLevel++;
+		if (Reg.currentLevel < Reg.levels.length)
+			FlxG.resetState();
+		else
+			FlxG.switchState(new IntroSubState(FlxColor.BLACK));
 	}
 }

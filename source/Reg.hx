@@ -1,3 +1,4 @@
+import flixel.math.FlxPoint;
 import flixel.util.FlxSave;
 import states.PlayState;
 
@@ -9,8 +10,10 @@ class Reg {
 	public static var time:Float = 300;
 	public static var pause:Bool = false;
 	public static var PS:PlayState;
-
+	public static var checkpointReached:Bool = false;
+	public static var levels:Array<String> = ["level1", "level2", "level3"];
 	inline static private var SAVE_DATA:String = "HAXEFLIXELGAME";
+	public static var currentLevel:Int = 0;
 
 	static public var save:FlxSave;
 

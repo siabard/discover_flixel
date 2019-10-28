@@ -15,9 +15,14 @@ class IntroSubState extends FlxSubState {
 
 	private var _gameOver:Bool = false;
 	private var _waitToDisappear:Float = 3.0;
+	private var _gameFinished:Bool = false;
 
 	override public function create():Void {
 		super.create();
+
+		if (Reg.currentLevel >= Reg.levels.length) {
+			_gameFinished = true;
+		}
 
 		if (Reg.lives < 0)
 			_gameOver = true;
@@ -34,8 +39,14 @@ class IntroSubState extends FlxSubState {
 			_text.text = "Game Over";
 			_text.setPosition(0, FlxG.height / 2);
 		} else {
-			add(_iconLives);
-			add(_textLives);
+			if (_gameFinished) {
+				_text.text = "Thanks for Playing!";
+				_text.setPosition(0, FlxG.height / 2);
+				_waitToDisappear = 5.0;
+			} else {
+				add(_iconLives);
+				add(_textLives);
+			}
 		}
 
 		forEachOfType(FlxObject, function(member) {
@@ -49,7 +60,7 @@ class IntroSubState extends FlxSubState {
 		_text.alignment = FlxTextAlign.CENTER;
 
 		new FlxTimer().start(_waitToDisappear, function(_) {
-			if (_gameOver) {
+			if (_gameOver || _gameFinished) {
 				Reg.saveScore();
 				Reg.lives = 2;
 				Reg.score = 0;
