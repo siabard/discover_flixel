@@ -1,5 +1,6 @@
 package objects;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
 
 class PowerUp extends FlxSprite {
@@ -37,6 +38,7 @@ class PowerUp extends FlxSprite {
 
 	public function collect(player:Player) {
 		kill();
+		FlxG.sound.play("powerup");
 		if (player.health == 0)
 			player.powerUp();
 		else

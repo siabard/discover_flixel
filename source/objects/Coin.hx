@@ -1,5 +1,6 @@
 package objects;
 
+import flixel.FlxG;
 import flixel.util.FlxTimer;
 import flixel.FlxSprite;
 
@@ -21,8 +22,10 @@ class Coin extends FlxSprite {
 	}
 
 	public function collect() {
+		FlxG.sound.play("coin");
 		Reg.score += SCORE_AMOUNT;
 		Reg.coins++;
+
 		if (Reg.coins >= 100) {
 			Reg.lives++;
 			Reg.coins = 0;

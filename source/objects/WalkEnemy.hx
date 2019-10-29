@@ -1,5 +1,7 @@
 package objects;
 
+import flixel.FlxG;
+
 class WalkEnemy extends Enemy {
 	private static inline var WALK_SPEED:Int = 40;
 	private static inline var SCORE_AMOUNT:Int = 100;
@@ -22,6 +24,7 @@ class WalkEnemy extends Enemy {
 
 	override public function kill() {
 		Reg.score += SCORE_AMOUNT;
+		FlxG.sound.play("defeat");
 		super.kill();
 	}
 }

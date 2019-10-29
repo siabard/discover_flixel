@@ -55,9 +55,10 @@ class Player extends FlxSprite {
 		}
 
 		if (velocity.y == 0) {
-			if (FlxG.keys.justPressed.C && isTouching(FlxObject.FLOOR))
+			if (FlxG.keys.justPressed.C && isTouching(FlxObject.FLOOR)) {
+				FlxG.sound.play("jump");
 				jump();
-
+			}
 			if (FlxG.keys.pressed.X)
 				maxVelocity.x = RUN_SPEED;
 			else
@@ -88,9 +89,9 @@ class Player extends FlxSprite {
 	private function animate():Void {
 		if (!alive)
 			animation.play("dead");
-		else if ((velocity.y <= 0) && (!isTouching(FlxObject.FLOOR)))
+		else if ((velocity.y <= 0) && (!isTouching(FlxObject.FLOOR))) {
 			animation.play("jump");
-		else if (velocity.y > 0)
+		} else if (velocity.y > 0)
 			animation.play("full");
 		else if (velocity.x == 0)
 			animation.play("idle");
@@ -104,12 +105,15 @@ class Player extends FlxSprite {
 
 	override public function kill() {
 		if (alive) {
+			FlxG.sound.play("death");
+			FlxG.sound.music.stop();
 			alive = false;
 			velocity.set(0, 0);
 			acceleration.set(0, 0);
 			Reg.lives -= 1;
 			Reg.pause = true;
 			new FlxTimer().start(2.0, function(_) {
+				FlxG.sound.play("dying");
 				acceleration.y = GRAVITY;
 				jump();
 			}, 1);

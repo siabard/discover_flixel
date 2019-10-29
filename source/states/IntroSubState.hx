@@ -65,8 +65,10 @@ class IntroSubState extends FlxSubState {
 				Reg.lives = 2;
 				Reg.score = 0;
 				FlxG.switchState(new MenuState());
-			} else
+			} else {
+				FlxG.sound.playMusic("pixelland");
 				close();
+			}
 		}, 1);
 	}
 }

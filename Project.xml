@@ -31,6 +31,28 @@
 	<classpath name="source" />
 	<assets path="assets" />
 
+	<assets path="assets/sounds">
+		<sound path="block.wav" id="block" />
+		<sound path="brick.wav" id="brick" />
+		<sound path="coin.wav" id="coin" />
+		<sound path="damage.wav" id="damage" />
+		<sound path="death.wav" id="death" />
+		<sound path="defeat.wav" id="defeat" />
+		<sound path="dying.wav" id="dying" />
+		<sound path="fireball.wav" id="fireball" />
+		<sound path="goal.wav" id="goal" />
+		<sound path="jump.wav" id="jump" />
+		<sound path="powerup-appear.wav" id="powerup-appear" />
+		<sound path="powerup.wav" id="powerup" />
+		<sound path="time-convert.wav" id="time-convert" />
+	</assets>
+
+	<assets path="assets/music">
+		<music path="pixelland.ogg" id="pixelland" />
+		<music path="victory.ogg" id="victory" />
+		<music path="pixelland.mp3" id="pixelland" if="flash" />
+		<music path="victory.mp3" id="victory"  if="flash" />
+	</assets>
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />

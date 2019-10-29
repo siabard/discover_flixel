@@ -39,6 +39,7 @@ class Goal extends FlxSprite {
 			return;
 
 		if (Reg.time > 0) {
+			FlxG.sound.play("time-convert", 0.75);
 			Reg.time -= 5;
 			Reg.score += 50;
 		} else {
