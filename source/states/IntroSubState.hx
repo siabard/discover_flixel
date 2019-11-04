@@ -19,7 +19,7 @@ class IntroSubState extends FlxSubState {
 
 	override public function create():Void {
 		super.create();
-
+		FlxG.camera.fade(FlxColor.BLACK, .2, true);
 		if (Reg.currentLevel >= Reg.levels.length) {
 			_gameFinished = true;
 		}
@@ -66,8 +66,11 @@ class IntroSubState extends FlxSubState {
 				Reg.score = 0;
 				FlxG.switchState(new MenuState());
 			} else {
-				FlxG.sound.playMusic("pixelland");
-				close();
+				FlxG.camera.fade(FlxColor.BLACK, .2, false, function() {
+					FlxG.sound.playMusic("pixelland");
+					FlxG.camera.fade(FlxColor.BLACK, .2, true);
+					close();
+				});
 			}
 		}, 1);
 	}

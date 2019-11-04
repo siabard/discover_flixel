@@ -1,5 +1,6 @@
 package objects;
 
+import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
@@ -7,6 +8,7 @@ import flixel.math.FlxMath;
 import flixel.FlxObject;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import utils.ControlsHandler;
 
 class Player extends FlxSprite {
 	private static inline var ACCELERATION:Int = 320;
@@ -35,7 +37,7 @@ class Player extends FlxSprite {
 	}
 
 	public function jump() {
-		if (FlxG.keys.pressed.C)
+		if (ControlsHandler.keyPressedJump())
 			velocity.y = JUMP_FORCE;
 		else
 			velocity.y = JUMP_FORCE / 2;
@@ -44,28 +46,28 @@ class Player extends FlxSprite {
 	private function move():Void {
 		acceleration.x = 0;
 
-		if (FlxG.keys.pressed.LEFT) {
+		if (ControlsHandler.keyPressedLeft()) {
 			flipX = true;
 			direction = -1;
 			acceleration.x -= ACCELERATION;
-		} else if (FlxG.keys.pressed.RIGHT) {
+		} else if (ControlsHandler.keyPressedRight()) {
 			flipX = false;
 			direction = 1;
 			acceleration.x = ACCELERATION;
 		}
 
 		if (velocity.y == 0) {
-			if (FlxG.keys.justPressed.C && isTouching(FlxObject.FLOOR)) {
+			if (ControlsHandler.keyPressedJump() && isTouching(FlxObject.FLOOR)) {
 				FlxG.sound.play("jump");
 				jump();
 			}
-			if (FlxG.keys.pressed.X)
+			if (ControlsHandler.keyPressedRun())
 				maxVelocity.x = RUN_SPEED;
 			else
 				maxVelocity.x = WALK_SPEED;
 		}
 
-		if ((velocity.y < 0) && (FlxG.keys.justReleased.C))
+		if ((velocity.y < 0) && (ControlsHandler.keyReleasedJump()))
 			velocity.y = velocity.y * 0.5;
 
 		if (x < 0)
@@ -107,6 +109,7 @@ class Player extends FlxSprite {
 		if (alive) {
 			FlxG.sound.play("death");
 			FlxG.sound.music.stop();
+			FlxG.camera.shake(0.01, 0.2);
 			alive = false;
 			velocity.set(0, 0);
 			acceleration.set(0, 0);
@@ -119,7 +122,10 @@ class Player extends FlxSprite {
 			}, 1);
 
 			new FlxTimer().start(6.0, function(_) {
-				FlxG.resetState();
+				FlxG.camera.fade(FlxColor.BLACK, .2, false, function() {
+					Reg.pause = false;
+					FlxG.resetState();
+				});
 			});
 		}
 	}

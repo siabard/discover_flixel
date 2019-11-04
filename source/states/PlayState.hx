@@ -1,5 +1,6 @@
 package states;
 
+import flixel.ui.FlxVirtualPad;
 import flixel.math.FlxPoint;
 import flixel.FlxCamera;
 import flixel.util.FlxColor;
@@ -32,6 +33,10 @@ class PlayState extends FlxState {
 	public var enemies(default, null):FlxTypedGroup<Enemy>;
 	public var blocks(default, null):FlxTypedGroup<FlxSprite>;
 	public var checkpoint:FlxPoint;
+
+	#if mobile
+	public var virtualPad:FlxVirtualPad;
+	#end
 
 	override public function create():Void {
 		Reg.PS = this;
@@ -70,6 +75,12 @@ class PlayState extends FlxState {
 		_terrain.add(blocks);
 
 		add(_hud);
+
+		#if mobile
+		virtualPad = new FlxVirtualPad(LEFT_RIGHT, A_B);
+		virtualPad.alpha = 0.75;
+		add(virtualPad);
+		#end
 
 		FlxG.camera.follow(player, FlxCameraFollowStyle.PLATFORMER);
 		FlxG.camera.setScrollBoundsRect(0, 0, map.width, map.height, true);
@@ -144,10 +155,12 @@ class PlayState extends FlxState {
 	public function nextLevel():Void {
 		Reg.checkpointReached = false;
 		checkpoint = null;
-		Reg.currentLevel++;
-		if (Reg.currentLevel < Reg.levels.length)
-			FlxG.resetState();
-		else
-			FlxG.switchState(new IntroSubState(FlxColor.BLACK));
+		FlxG.cameras.fade(FlxColor.BLACK, .2, false, function() {
+			Reg.currentLevel++;
+			if (Reg.currentLevel < Reg.levels.length)
+				FlxG.resetState();
+			else
+				FlxG.switchState(new IntroSubState(FlxColor.BLACK));
+		});
 	}
 }
