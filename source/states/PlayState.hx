@@ -11,6 +11,7 @@ import objects.Coin;
 import objects.Enemy;
 import objects.PowerUp;
 import objects.BonusBlock;
+import objects.BrickBlock;
 import objects.Goal;
 import flixel.FlxCamera.FlxCameraFollowStyle;
 import flixel.FlxG;
@@ -120,6 +121,10 @@ class PlayState extends FlxState {
 
 		if (Std.is(entity, Goal)) {
 			(cast entity).reach(player);
+		}
+
+		if (Std.is(entity, BrickBlock)) {
+			(cast entity).hit(player);
 		}
 	}
 

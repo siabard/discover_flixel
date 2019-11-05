@@ -4,6 +4,7 @@ import flixel.math.FlxPoint;
 import objects.WalkEnemy;
 import objects.SpikeEnemy;
 import objects.BonusBlock;
+import objects.BrickBlock;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.addons.editors.tiled.TiledObjectLayer;
 import flixel.tile.FlxTilemap;
@@ -76,6 +77,11 @@ class LevelLoader {
 			var blockToAdd = new BonusBlock(block.x, block.y - 16);
 			blockToAdd.content = block.type;
 			state.blocks.add(blockToAdd);
+		}
+
+		// Load brick blocks
+		for (block in getLevelObjects(tiledMap, "bricks")) {
+			state.blocks.add(new BrickBlock(block.x, block.y - 16));
 		}
 	}
 }
