@@ -1,5 +1,6 @@
 package states;
 
+import objects.InvincibilityBonus;
 import flixel.ui.FlxVirtualPad;
 import flixel.math.FlxPoint;
 import flixel.FlxCamera;
@@ -118,6 +119,9 @@ class PlayState extends FlxState {
 		if (Std.is(entity, PowerUp)) {
 			(cast entity).collect(player);
 		}
+
+		if (Std.is(entity, InvincibilityBonus))
+			(cast entity).collect(player);
 
 		if (Std.is(entity, Goal)) {
 			(cast entity).reach(player);

@@ -38,6 +38,9 @@ class BonusBlock extends FlxSprite {
 			case "powerup":
 				var _pwrUp:PowerUp = new PowerUp(Std.int(x), Std.int(y));
 				Reg.PS.items.add(_pwrUp);
+			case "invincible":
+				var _invic:InvincibilityBonus = new InvincibilityBonus(Std.int(x), Std.int(y));
+				Reg.PS.items.add(_invic);
 			default:
 				var _coin:Coin = new Coin(Std.int(x), Std.int(y - 16));
 				_coin.setFromBlock();

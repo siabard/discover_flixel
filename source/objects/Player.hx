@@ -11,6 +11,8 @@ import flixel.FlxSprite;
 import utils.ControlsHandler;
 
 class Player extends FlxSprite {
+	private static var INVINCIBLE_DURATION:Float = 5.0;
+
 	private static inline var ACCELERATION:Int = 320;
 	private static inline var DRAG:Int = 320;
 	private static inline var GRAVITY:Int = 600;
@@ -22,8 +24,8 @@ class Player extends FlxSprite {
 	private var _stopAnimations = false;
 
 	public var flickering:Bool = false;
-
 	public var direction:Int = 1;
+	public var invincible:Bool = false;
 
 	public function new() {
 		super();
@@ -85,6 +87,11 @@ class Player extends FlxSprite {
 		if (!_stopAnimations)
 			animate();
 
+		if (invincible) {
+			color = FlxColor.fromHSB((Reg.time * 1800) % 360, 1, 1);
+		} else {
+			color = FlxColor.WHITE;
+		}
 		super.update(elapsed);
 	}
 
@@ -208,5 +215,12 @@ class Player extends FlxSprite {
 			});
 		} else
 			kill();
+	}
+
+	public function makeInvincible():Void {
+		invincible = true;
+		new FlxTimer().start(INVINCIBLE_DURATION, function(_) {
+			invincible = false;
+		});
 	}
 }

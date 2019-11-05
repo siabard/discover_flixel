@@ -20,6 +20,8 @@ class SpikeEnemy extends Enemy {
 	}
 
 	override public function interact(player:Player) {
+		checkIfInvincible(player);
+
 		if (alive)
 			player.damage();
 	}

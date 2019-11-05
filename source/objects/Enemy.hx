@@ -1,5 +1,6 @@
 package objects;
 
+import flixel.FlxG;
 import flixel.util.FlxTimer;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -7,9 +8,12 @@ import flixel.FlxSprite;
 class Enemy extends FlxSprite {
 	private static inline var GRAVITY:Int = 420;
 	private static inline var FALLING_SPEED:Int = 200;
+	private static var FLIP_FORCE:Int = -100;
+	private static inline var SCORE_AMOUNT:Int = 100;
 
 	private var _direction:Int = -1;
 	private var _appeared:Bool = false;
+	private var _dieFlip:Bool = false;
 
 	public function new(x:Float, y:Float) {
 		super(x, y);
@@ -50,6 +54,8 @@ class Enemy extends FlxSprite {
 	private function move() {}
 
 	public function interact(player:Player) {
+		checkIfInvincible(player);
+
 		if (!alive)
 			return;
 
@@ -64,14 +70,34 @@ class Enemy extends FlxSprite {
 
 	override public function kill() {
 		alive = false;
+		Reg.score += SCORE_AMOUNT;
+		FlxG.sound.play("defeat");
 
-		velocity.x = 0;
-		acceleration.x = 0;
-		animation.play("dead");
+		if (!_dieFlip) {
+			velocity.x = 0;
+			acceleration.x = 0;
+			animation.play("dead");
 
-		new FlxTimer().start(1.0, function(_) {
-			exists = false;
-			visible = false;
-		}, 1);
+			new FlxTimer().start(1.0, function(_) {
+				exists = false;
+				visible = false;
+			}, 1);
+		} else {
+			flipY = true;
+			velocity.y = FLIP_FORCE;
+			acceleration.x = 0;
+			solid = false;
+		}
+	}
+
+	public function killFlipping() {
+		_dieFlip = true;
+		kill();
+	}
+
+	private function checkIfInvincible(player:Player) {
+		if (player.invincible) {
+			killFlipping();
+		}
 	}
 }
