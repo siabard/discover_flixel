@@ -16,9 +16,15 @@ class PowerUp extends FlxSprite {
 		super(x, y);
 
 		loadGraphic(AssetPaths.items__png, true, 16, 16);
-		animation.add("idle", [5]);
-		animation.play("idle");
+		animation.add("powerup", [5]);
+		animation.add("powerfire", [13]);
 
+		if (Reg.PS.player.health < 1)
+			animation.play("powerup");
+		else
+			animation.play("powerfire");
+
+		FlxG.sound.play("powerup-appear");
 		velocity.y = -16;
 	}
 
@@ -39,7 +45,7 @@ class PowerUp extends FlxSprite {
 	public function collect(player:Player) {
 		kill();
 		FlxG.sound.play("powerup");
-		if (player.health == 0)
+		if (player.health < 2)
 			player.powerUp();
 		else
 			Reg.score += SCORE_AMOUNT;

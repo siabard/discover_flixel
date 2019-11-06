@@ -1,5 +1,7 @@
 package states;
 
+import haxe.io.Encoding;
+import objects.FireBall;
 import objects.InvincibilityBonus;
 import flixel.ui.FlxVirtualPad;
 import flixel.math.FlxPoint;
@@ -101,34 +103,45 @@ class PlayState extends FlxState {
 
 		FlxG.collide(_terrain, _entities);
 		FlxG.collide(enemies, enemies);
-
+		FlxG.overlap(_entities, enemies, collideEntities);
 		updateTime(elapsed);
 		updateCheckPoint();
 	}
 
-	function collideEntities(entity:FlxSprite, player:Player):Void {
-		if (Std.is(entity, Coin))
-			(cast entity).collect();
+	function collideEntities(entity:FlxSprite, subject:FlxSprite):Void {
+		if (Std.is(subject, Player)) {
+			var player:Player = cast subject;
 
-		if (Std.is(entity, Enemy))
-			(cast entity).interact(player);
+			if (Std.is(entity, Coin))
+				(cast entity).collect();
 
-		if (Std.is(entity, BonusBlock))
-			(cast entity).hit(player);
+			if (Std.is(entity, Enemy))
+				(cast entity).interact(player);
 
-		if (Std.is(entity, PowerUp)) {
-			(cast entity).collect(player);
-		}
+			if (Std.is(entity, BonusBlock))
+				(cast entity).hit(player);
 
-		if (Std.is(entity, InvincibilityBonus))
-			(cast entity).collect(player);
+			if (Std.is(entity, PowerUp)) {
+				(cast entity).collect(player);
+			}
 
-		if (Std.is(entity, Goal)) {
-			(cast entity).reach(player);
-		}
+			if (Std.is(entity, InvincibilityBonus))
+				(cast entity).collect(player);
 
-		if (Std.is(entity, BrickBlock)) {
-			(cast entity).hit(player);
+			if (Std.is(entity, Goal)) {
+				(cast entity).reach(player);
+			}
+
+			if (Std.is(entity, BrickBlock)) {
+				(cast entity).hit(player);
+			}
+		} else if (Std.is(subject, Enemy)) {
+			var enemy:Enemy = cast subject;
+			if (Std.is(entity, Enemy))
+				enemy.collideOtherEnemy(cast entity);
+
+			if (Std.is(entity, FireBall))
+				enemy.collideFireball(cast entity);
 		}
 	}
 

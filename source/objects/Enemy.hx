@@ -14,6 +14,9 @@ class Enemy extends FlxSprite {
 	private var _direction:Int = -1;
 	private var _appeared:Bool = false;
 	private var _dieFlip:Bool = false;
+	private var _canFireballDamage:Bool = true;
+
+	public var damageOthers:Bool = true;
 
 	public function new(x:Float, y:Float) {
 		super(x, y);
@@ -99,5 +102,18 @@ class Enemy extends FlxSprite {
 		if (player.invincible) {
 			killFlipping();
 		}
+	}
+
+	public function collideOtherEnemy(otherEnemy:Enemy) {
+		if (otherEnemy.damageOthers)
+			killFlipping();
+		else
+			FlxObject.separate(this, otherEnemy);
+	}
+
+	public function collideFireball(fireball:FireBall) {
+		fireball.kill();
+		if (_canFireballDamage)
+			killFlipping();
 	}
 }

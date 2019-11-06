@@ -11,7 +11,6 @@
 	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
 	<set name="SWF_VERSION" value="11.8" />
 
-	<haxelib name="openfl" version="3.6.1" if="mobile" />
 	<!-- ____________________________ Window Settings ___________________________ -->
 
 	<!--These window settings apply to all targets-->
@@ -19,10 +18,7 @@
 
 	<!--HTML5-specific-->
 	<window if="html5" resizable="false" />
-
-	<!-- Web specific-->
-	<window if="web" orientation="landscape" />
-
+	
 	<!--Desktop-specific-->
 	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
 

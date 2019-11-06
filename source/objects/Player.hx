@@ -22,6 +22,7 @@ class Player extends FlxSprite {
 	private static inline var FALLING_SPEED:Int = 300;
 
 	private var _stopAnimations = false;
+	private var _canShoot = true;
 
 	public var flickering:Bool = false;
 	public var direction:Int = 1;
@@ -29,7 +30,7 @@ class Player extends FlxSprite {
 
 	public function new() {
 		super();
-		health = 0;
+		health = 2;
 
 		reloadGraphics();
 
@@ -82,6 +83,7 @@ class Player extends FlxSprite {
 	override public function update(elapsed:Float):Void {
 		if (!Reg.pause) {
 			move();
+			shootFireball();
 		}
 
 		if (!_stopAnimations)
@@ -138,32 +140,47 @@ class Player extends FlxSprite {
 	}
 
 	private function reloadGraphics() {
-		loadGraphic(AssetPaths.player_both__png, true, 16, 32);
+		loadGraphic(AssetPaths.player_all__png, true, 16, 32);
+		var animationOffset:Int = 0;
+
 		switch (health) {
 			case 0:
 				setSize(8, 12);
 				offset.set(4, 20);
-				animation.add("idle", [0]);
-				animation.add("walk", [1, 2, 3, 2], 12);
-				animation.add("skid", [4]);
-				animation.add("jump", [5]);
-				animation.add("fall", [5]);
+
+				animation.add("powerup", [5, 12], 24);
 			case 1:
 				setSize(8, 24);
 				offset.set(4, 8);
-				animation.add("idle", [7]);
-				animation.add("walk", [8, 9, 10, 9], 12);
-				animation.add("skid", [11]);
-				animation.add("jump", [12]);
-				animation.add("fall", [12]);
+
+				animationOffset = 7;
+				animation.add("powerup", [12, 19], 24);
+				animation.add("damage", [5, 12], 24);
+			case 2:
+				setSize(8, 24);
+				offset.set(4, 8);
+
+				animationOffset = 14;
+
+				animation.add("shoot", [20]);
+				animation.add("damage", [5, 19], 24);
 		}
+		animation.add("idle", [0 + animationOffset]);
+		animation.add("walk", [
+			1 + animationOffset,
+			2 + animationOffset,
+			3 + animationOffset,
+			2 + animationOffset
+		], 12);
+		animation.add("skid", [4 + animationOffset]);
+		animation.add("jump", [5 + animationOffset]);
+		animation.add("fall", [5 + animationOffset]);
 
 		animation.add("dead", [6]);
-		animation.add("transform", [5, 12], 24);
 	}
 
 	public function powerUp() {
-		if (health >= 1)
+		if (health >= 2)
 			return;
 
 		var _prevVelocity:FlxPoint = new FlxPoint().copyFrom(velocity);
@@ -171,14 +188,16 @@ class Player extends FlxSprite {
 
 		Reg.pause = true;
 		_stopAnimations = true;
-		animation.play("transform");
+		animation.play("powerup");
 		velocity.set(0, 0);
 		acceleration.set(0, 0);
 
 		new FlxTimer().start(1.0, function(_) {
 			health++;
 			reloadGraphics();
-			y -= 16;
+
+			if (health == 1)
+				y -= 16;
 
 			Reg.pause = false;
 			_stopAnimations = false;
@@ -198,7 +217,9 @@ class Player extends FlxSprite {
 
 			Reg.pause = true;
 			_stopAnimations = true;
-			animation.play("transform");
+
+			health = 1;
+			animation.play("damage");
 			velocity.set(0, 0);
 			acceleration.set(0, 0);
 
@@ -222,5 +243,26 @@ class Player extends FlxSprite {
 		new FlxTimer().start(INVINCIBLE_DURATION, function(_) {
 			invincible = false;
 		});
+	}
+
+	private function shootFireball() {
+		if (health != 2)
+			return;
+
+		if (ControlsHandler.keyJustPressedRun() && _canShoot) {
+			var fireball:FireBall = new FireBall(x, y);
+			fireball.direction = direction;
+			Reg.PS.items.add(fireball);
+			FlxG.sound.play("fireball");
+
+			_canShoot = false;
+			new FlxTimer().start(0.25, function(_) _canShoot = true);
+
+			if (velocity.y == 0) {
+				_stopAnimations = true;
+				animation.play("shoot");
+				new FlxTimer().start(0.1, function(_) _stopAnimations = false);
+			}
+		}
 	}
 }

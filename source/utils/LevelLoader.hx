@@ -3,6 +3,7 @@ package utils;
 import flixel.math.FlxPoint;
 import objects.WalkEnemy;
 import objects.SpikeEnemy;
+import objects.ShellEnemy;
 import objects.BonusBlock;
 import objects.BrickBlock;
 import flixel.addons.editors.tiled.TiledObject;
@@ -67,6 +68,8 @@ class LevelLoader {
 			switch (enemy.type) {
 				case "spike":
 					state.enemies.add(new SpikeEnemy(enemy.x, enemy.y - 16));
+				case "shell":
+					state.enemies.add(new ShellEnemy(enemy.x, enemy.y - 16));
 				default:
 					state.enemies.add(new WalkEnemy(enemy.x, enemy.y - 16));
 			}

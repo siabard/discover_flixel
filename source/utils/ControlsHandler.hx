@@ -43,4 +43,11 @@ class ControlsHandler {
 			return false;
 		}
 	}
+
+	static public function keyJustPressedRun():Bool {
+		if (#if mobile Reg.PS.virtualPad.buttonB.justPressed #else (FlxG.keys.justPressed.X) #end) {
+			return true;
+		}
+		return false;
+	}
 }
